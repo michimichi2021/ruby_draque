@@ -1,52 +1,21 @@
 class Brave
+  #attr_readerの記述でゲッターを省略することができる
+  attr_reader :name, :offense, :defense
+  #セッターゲッターを一括定義
+  attr_accessor :hp
 
-  #nameのセッター
-  def name=(name)
-    @name = name
+  #new演算子から渡された引数を受け取る
+  def initialize(**params)
+    @name = params[:name]
+    @hp = params[:hp]
+    @offense = params[:offense]
+    @defense = params[:defense]
   end
 
-  #nameのゲッター
-  def name
-    @name
-  end
-
-  #hpのセッター
-  def hp=(hp)
-    @hp = hp
-  end
-
-  #hpのゲッター
-  def hp
-    @hp
-  end
-
-  #offenseのセッター
-  def offense=(offense)
-    @offense = offense
-  end
-
-  #offenseのゲッター
-  def offense
-    @offense
-  end
-
-  #defenseのセッター
-  def defense=(defense)
-    @defense = defense
-  end
-
-  #defenseのゲッター
-  def defense
-    @defense
-  end
 
 end
 
-brave = Brave.new
-brave.name = "テリー"
-brave.hp = 500
-brave.offense = 150
-brave.defense = 100
+brave = Brave.new(name:"テリー", hp:500, offense:150, defense:100)
 
 puts <<~TEXT
 NAME:#{brave.name}
@@ -54,3 +23,6 @@ HP:#{brave.hp}
 OFFENSE:#{brave.offense}
 DEFENSE:#{brave.defense}
 TEXT
+
+brave.hp -= 30
+puts "#{brave.name}はダメージを受けた!残りHPは#{brave.hp}だ"
