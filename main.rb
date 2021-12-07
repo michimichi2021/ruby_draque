@@ -5,13 +5,18 @@ class Brave
   attr_accessor :hp
 
   #new演算子から渡された引数を受け取る
-  def initialize(**params)
+  def initialize(params)
     @name = params[:name]
     @hp = params[:hp]
     @offense = params[:offense]
     @defense = params[:defense]
   end
 
+  # 攻撃処理を実装するメソッド
+  def attack(monster)
+    #モンスタークラスのインスタンスが参照できているか確かめる
+    puts "テスト:#{monster.name}のHPを表示->#{monster.hp}"
+  end
 
 end
 
@@ -41,3 +46,4 @@ class Monster
 end
 
 monster = Monster.new(name: "スライム", hp: 250, offense: 200, defense: 100)
+brave.attack(monster)
