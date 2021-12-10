@@ -14,8 +14,28 @@ class Brave
 
   # 攻撃処理を実装するメソッド
   def attack(monster)
-    #モンスタークラスのインスタンスが参照できているか確かめる
-    puts "テスト:#{monster.name}のHPを表示->#{monster.hp}"
+   puts "#{@name}の攻撃"
+
+   damage = @offense - monster.defense
+
+   #自己代入:monster.hpからdamageを引いた値をmonster.hpに代入
+   monster.hp -= damage
+
+   puts "#{monster.name}は#{damage}のダメージを受けた"
+   puts "#{monster.name}の残りHPは#{monster.hp}だ"
+  end
+
+end
+
+class Monster
+  attr_reader :name, :offense, :defense
+  attr_accessor :hp
+
+  def initialize(params)
+    @name = params[:name]
+    @hp = params[:hp]
+    @offense = params[:offense]
+    @defense = params[:defense]
   end
 
 end
@@ -31,19 +51,6 @@ TEXT
 
 brave.hp -= 30
 puts "#{brave.name}はダメージを受けた!残りHPは#{brave.hp}だ"
-
-class Monster
-  attr_reader :name, :offense, :defense
-  attr_accessor :hp
-
-  def initialize(**params)
-    @name = params[:name]
-    @hp = params[:hp]
-    @offense = params[:offense]
-    @defense = params[:defense]
-  end
-
-end
 
 monster = Monster.new(name: "スライム", hp: 250, offense: 200, defense: 100)
 brave.attack(monster)
