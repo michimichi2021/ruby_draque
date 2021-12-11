@@ -47,6 +47,10 @@ class Monster
   attr_reader :name, :offense, :defense
   attr_accessor :hp
 
+  #必殺攻撃の計算に使う定数
+  SPECIAL_ATTACK_CONSTANT = 1.5
+
+
   def initialize(params)
     @name = params[:name]
     @hp = params[:hp]
@@ -54,20 +58,32 @@ class Monster
     @defense = params[:defense]
   end
 
+  def attack(brave)
+    puts "#{@name}の攻撃"
+    if @hp/2 < @hp
+      puts "通常攻撃"
+      damage = @offense - brave.defense
+    else
+      puts "ドラゴンに変身した"
+      damage = special_monster_attack - brave.defense
+    end
+
+   brave.hp -= damage
+
+   puts "#{brave.name}は#{damage}のダメージを受けた"
+   puts "#{brave.name}の残りHPは#{brave.hp}だ"
+  end
+
+  def special_monster_attack
+    @offense*SPECIAL_ATTACK_CONSTANT
+  end
+
 end
 
 brave = Brave.new(name:"テリー", hp:500, offense:150, defense:100)
 monster = Monster.new(name: "スライム", hp: 250, offense: 200, defense: 100)
 
-# puts <<~TEXT
-# NAME:#{brave.name}
-# HP:#{brave.hp}
-# OFFENSE:#{brave.offense}
-# DEFENSE:#{brave.defense}
-# TEXT
-
-# brave.hp -= 30
-puts "#{brave.name}はダメージを受けた!残りHPは#{brave.hp}だ"
 
 
 brave.attack(monster)
+monster.attack(brave)
