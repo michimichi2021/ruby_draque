@@ -44,39 +44,54 @@ class Brave
 end
 
 class Monster
-  attr_reader :name, :offense, :defense
-  attr_accessor :hp
+  attr_reader :offense, :defense
+  attr_accessor :hp, :name
 
   #必殺攻撃の計算に使う定数
   SPECIAL_ATTACK_CONSTANT = 1.5
-
+  CALC_HALF_HP = 0.5
 
   def initialize(params)
     @name = params[:name]
     @hp = params[:hp]
     @offense = params[:offense]
     @defense = params[:defense]
+    #モンスターが変身したかどうかを判定するフラグ
+    @transform_flag = false
+
+    @half_hp = params[:hp]*CALC_HALF_HP
   end
 
   def attack(brave)
     puts "#{@name}の攻撃"
-    if @hp/2 < @hp
-      puts "通常攻撃"
-      damage = @offense - brave.defense
-    else
-      puts "ドラゴンに変身した"
-      damage = special_monster_attack - brave.defense
+    if @hp <= @half_hp && @transform_flag == false
+      @transform_flag = true
+      transform
     end
 
-   brave.hp -= damage
+    damage = @offense - brave.defense
+    brave.hp -= damage
+
 
    puts "#{brave.name}は#{damage}のダメージを受けた"
    puts "#{brave.name}の残りHPは#{brave.hp}だ"
   end
 
-  def special_monster_attack
-    @offense*SPECIAL_ATTACK_CONSTANT
+  #クラス外から呼び出せないようにする
+  private
+
+  def transform
+    transform_name = "ドラゴン"
+
+    puts <<~EOS
+    #{@name}は怒っている
+    #{@name}は#{transform_name}に変身した
+    EOS
+
+    @offense*=SPECIAL_ATTACK_CONSTANT
+    @name = transform_name
   end
+
 
 end
 
