@@ -2,30 +2,21 @@ class Brave
   attr_reader :name, :offense, :defense
   attr_accessor :hp
 
-  #必殺攻撃の計算に使う定数
   SPECIAL_ATTACK_CONSTANT = 1.5
 
-  #new演算子から渡された引数を受け取る
-  def initialize(params)
+  def initialize(**params)
     @name = params[:name]
     @hp = params[:hp]
     @offense = params[:offense]
     @defense = params[:defense]
   end
 
-  # 攻撃処理を実装するメソッド
   def attack(monster)
    puts "#{@name}の攻撃"
 
-   #decision_attack_typeメソッドの呼び出し
    attack_type = decision_attack_type
-
-   #calculate_damageメソッドの呼び出し
    damage = calculate_damage(target: monster,attack_type: attack_type)
-
-   #ダメージをHPに反映させる
    cause_damage(target: monster,damage: damage)
-
 
    puts "#{monster.name}の残りHPは#{monster.hp}だ"
   end
@@ -33,10 +24,8 @@ class Brave
   private
 
   def decision_attack_type
-   #0~3の間でランダムに数字が変わる
    attack_num = rand(4)
 
-   #4分の1の確率でcalculate_special_attackを実行
    if attack_num == 0
     puts "必殺攻撃"
     "special_attack"
@@ -46,7 +35,6 @@ class Brave
    end
   end
 
-  #ダメージの計算メソッド
   def calculate_damage(**params)
     target = params[:target]
     attack_type = params[:attack_type]
@@ -56,20 +44,21 @@ class Brave
     else
       @offense - target.defense
     end
-
   end
 
-  #HPにダメージを反映させる
   def cause_damage(**params)
    damage = params[:damage]
    target = params[:target]
 
    target.hp -= damage
+
+   #もしターゲットのHPがマイナスになるなら0を代入
+   target.hp = 0 if target.hp < 0
+
    puts "#{target.name}は#{damage}のダメージを受けた"
   end
 
   def calculate_special_attack
-  #攻撃力が1.5倍
     @offense*SPECIAL_ATTACK_CONSTANT
   end
 
@@ -79,38 +68,50 @@ class Monster
   attr_reader :offense, :defense
   attr_accessor :hp, :name
 
-  #必殺攻撃の計算に使う定数
   SPECIAL_ATTACK_CONSTANT = 1.5
   CALC_HALF_HP = 0.5
 
-  def initialize(params)
+  def initialize(**params)
     @name = params[:name]
     @hp = params[:hp]
     @offense = params[:offense]
     @defense = params[:defense]
-    #モンスターが変身したかどうかを判定するフラグ
-    @transform_flag = false
 
+    @transform_flag = false
     @half_hp = params[:hp]*CALC_HALF_HP
   end
 
   def attack(brave)
-    puts "#{@name}の攻撃"
     if @hp <= @half_hp && @transform_flag == false
       @transform_flag = true
       transform
     end
 
-    damage = @offense - brave.defense
-    brave.hp -= damage
+    puts "#{@name}の攻撃"
 
+    damage = calculate_damage(brave)
+    cause_damage(target:brave, damage: damage)
 
-   puts "#{brave.name}は#{damage}のダメージを受けた"
-   puts "#{brave.name}の残りHPは#{brave.hp}だ"
+    puts "#{brave.name}の残りHPは#{brave.hp}だ"
   end
 
-  #クラス外から呼び出せないようにする
   private
+
+  def calculate_damage(target)
+    @offense - target.defense
+  end
+
+  def cause_damage(**params)
+    damage = params[:damage]
+    target = params[:target]
+
+    target.hp -= damage
+
+    #もしターゲットのHPがマイナスになるなら0を代入
+    target.hp = 0 if target.hp < 0
+
+    puts "#{target.name}は#{damage}のダメージを受けた"
+  end
 
   def transform
     transform_name = "ドラゴン"
@@ -120,7 +121,7 @@ class Monster
     #{@name}は#{transform_name}に変身した
     EOS
 
-    @offense*=SPECIAL_ATTACK_CONSTANT
+    @offense *= SPECIAL_ATTACK_CONSTANT
     @name = transform_name
   end
 
@@ -131,6 +132,10 @@ brave = Brave.new(name:"テリー", hp:500, offense:150, defense:100)
 monster = Monster.new(name: "スライム", hp: 250, offense: 200, defense: 100)
 
 
+loop do
+  brave.attack(monster)
+  break if monster.hp <= 0
 
-brave.attack(monster)
-monster.attack(brave)
+  monster.attack(brave)
+  break if brave.hp <= 0
+end
