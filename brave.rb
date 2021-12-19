@@ -8,8 +8,10 @@ class Brave < Character
    attack_type = decision_attack_type
    damage = calculate_damage(target: monster,attack_type: attack_type)
    cause_damage(target: monster,damage: damage)
-    # attack_typeを引数に渡す
+
    attack_message(attack_type: attack_type)
+   #damage_messageを呼び出す
+   damage_message(target: monster,damage: damage)
   end
 
   private
@@ -41,8 +43,6 @@ class Brave < Character
 
    target.hp -= damage
    target.hp = 0 if target.hp < 0
-
-  #  puts "#{target.name}は#{damage}のダメージを受けた"
   end
 
   def calculate_special_attack

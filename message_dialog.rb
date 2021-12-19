@@ -1,5 +1,4 @@
 module MessageDialog
-  #攻撃実行側のクラスのnameパラメーターを使用して攻撃メッセージを表示
   def attack_message(**params)
     attack_type = params[:attack_type]
 
@@ -7,8 +6,15 @@ module MessageDialog
     puts "必殺攻撃" if attack_type == "special_attack"
   end
 
-  #ダメージを受けた時のメッセージ
-  def damage_message
+  #damage_messageの実装
+  def damage_message(**params)
+    target = params[:target]
+    damage = params[:damage]
+
+    puts <<~EOS
+    #{target.name}は#{damage}のダメージを受けた
+    #{target.name}の残りHPは#{target.hp}だ
+    EOS
   end
 
   #バトルが終了した時のメッセージ

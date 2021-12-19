@@ -26,7 +26,8 @@ class Monster < Character
     cause_damage(target:brave, damage: damage)
 
     attack_message
-    # puts "#{brave.name}の残りHPは#{brave.hp}だ"
+    #damage_messageを呼び出す
+    damage_message(target: brave,damage: damage)
   end
 
   private
@@ -41,8 +42,6 @@ class Monster < Character
 
     target.hp -= damage
     target.hp = 0 if target.hp < 0
-
-    # puts "#{target.name}は#{damage}のダメージを受けた"
   end
 
   def transform
