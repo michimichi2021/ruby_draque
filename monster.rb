@@ -25,7 +25,7 @@ class Monster < Character
     damage = calculate_damage(brave)
     cause_damage(target:brave, damage: damage)
 
-    attack_message
+    attack_message(target:brave)
     #damage_messageを呼び出す
     damage_message(target: brave,damage: damage)
   end
@@ -47,10 +47,8 @@ class Monster < Character
   def transform
     transform_name = "ドラゴン"
 
-    # puts <<~EOS
-    # #{@name}は怒っている
-    # #{@name}は#{transform_name}に変身した
-    # EOS
+    #transform_messsageを呼び出し
+    transform_message(origin_name: @name,transform_name: transform_name)
 
     @offense *= SPECIAL_ATTACK_CONSTANT
     @name = transform_name
